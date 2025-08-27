@@ -15,8 +15,7 @@ List insertSorted(List L, int data);
 void display(List L);
 
 int main() {
-    List L;
-    initialize(L);
+    List L = initialize(L);
     
     L.elem[0] = 1;
     L.elem[1] = 2;
@@ -26,36 +25,70 @@ int main() {
     // for (int i = 0; i < L.count; i++){
     //     printf("%d ", L.elem[i]);
     // }
-
     
-    insertPos(L, 4, 1);
-    insertPos(L, 5, 2);
+    L = insertPos(L, 4, 1);
+    display(L);
+   
+    L = deletePos(L, 2);
+    display(L);
+   
+    int idx = locate(L, 3);
+    printf("The position of 3 is at index %d\n", idx);
+    
+    L = insertSorted(L, 5);
+    display(L);
 
     return 0;
 }
 
 List initialize(List L){
     L.count = 0;
+    return L;
 }
 
-// List insertPos(List L, int data, int position){
-//     for (int i = L.count; i >= position ; i--){
-//         if (L.count < MAX){
-//             List tmp;
-//             L.elem[i + 1] = tmp
-//         }
-//     }
-// }
-
-// List deletePos(List L, int position){
-//     List newL;
-//     for (int i = 0; i <= L.count; i++){
+List insertPos(List L, int data, int position){
+    if (L.count < MAX){
+        for (int i = L.count-1; i >= position ; i--){
+                L.elem[i + 1] = L.elem[i];
+        }
         
-//     }
-// }
+        L.elem[position] = data;
+        L.count++;
+        return L;
+    }
+}
+
+List deletePos(List L, int position){
+    if (position <= L.count){
+        for (int i = position; i < L.count-1; i++){
+            L.elem[i] = L.elem[i + 1];
+        }
+        
+        L.count--;
+        return L;
+    }
+}
+
+int locate(List L, int data){
+    for (int i = 0; i < L.count; i++){
+        if (data == L.elem[i]){
+            return i;
+        }
+    }
+    return -1;
+}
+
+List insertSorted(List L, int data){
+    if (L.count < MAX){
+        int i = 0; 
+        while (i < L.count && L.elem[i] < data) i++;
+        return insertPos(L, data, i);
+    }
+}
 
 void display(List L){
-    for (int i = 0; i <= L.count; i++){
+    for (int i = 0; i < L.count; i++){
         printf("%d ", L.elem[i]);
     }
+    printf("\n");
 }
