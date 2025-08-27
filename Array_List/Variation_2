@@ -1,0 +1,116 @@
+#define MAX 10
+
+#include <stdio.h>
+
+typedef struct {
+    int elem[MAX];
+    int count;
+} Etype, *EPtr;
+
+void initialize(EPtr L);
+void insertPos(EPtr L, int data, int position);
+void deletePos(EPtr L, int position);
+int locate(EPtr L, int data);
+int retrieve(EPtr L, int position);
+void insertSorted(EPtr L, int data);
+void display(EPtr L);
+void makeNULL(EPtr L);
+
+int main(){
+    Etype List;
+    EPtr L = &List;
+    
+    initialize(L);
+    
+    L->elem[0] = 1;
+    L->elem[1] = 2;
+    L->elem[2] = 3;
+    L->count = 3;
+    
+    // for (int i = 0; i < L->count; i++){
+    //     printf("%d ", L->elem[i]);
+    // }
+    
+    insertPos(L, 4, 1);
+    display(L);
+    
+    deletePos(L, 1);
+    display(L);
+    
+    int idx = locate(L, 2);
+    printf("The position of 2 is at index %d.", idx);
+    
+    printf("\n");
+    
+    int retrieved = retrieve(L, 2);
+    printf("The element that's located in position 2 is %d", retrieved);
+    
+    printf("\n");
+    
+    insertSorted(L, 4);
+    display(L);
+    
+    
+    return 0;
+}
+
+void initialize(EPtr L){
+    L->count = 0;
+}
+
+void insertPos(EPtr L, int data, int position){
+    if (L->count < MAX){
+        for (int i = L->count-1; i >= position; i--){
+            L->elem[i + 1] = L->elem[i];
+        }
+        L->elem[position] = data;
+        L->count++;
+    }
+}
+
+void deletePos(EPtr L, int position){
+    if (position <= L->count){
+        for (int i = position; i < L->count - 1; i++){
+            L->elem[i] = L->elem[i + 1];
+        }
+        L->count--;
+    }
+}
+
+int locate(EPtr L, int data){
+    for (int i = 0; i < L->count; i++){
+        if (data == L->elem[i]){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int retrieve(EPtr L, int position){
+    if (position <= L->count){
+        for (int i = 0; i < L->count; i++){
+            if (position == i){
+                return L->elem[i];
+            }
+        }
+    }
+}
+
+void insertSorted(EPtr L, int data){
+    if (L->count < MAX){
+        int i = 0;
+        while (i < L->count && L->elem[i] < data) i++;
+        insertPos(L, data, i);
+    }
+}
+
+void display(EPtr L){
+    for (int i = 0; i < L->count; i++){
+        printf("%d ", L->elem[i]);
+    }
+    printf("\n");
+}
+
+// void makeNULL(EPtr L){
+//     L->
+// }
