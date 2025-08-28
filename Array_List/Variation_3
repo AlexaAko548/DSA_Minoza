@@ -1,0 +1,76 @@
+#define LENGTH 10
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int *elemPtr;
+    int count;
+    int max;
+} List;
+
+List initialize(List L);
+List insertPos(List L, int data, int position);
+List deletePos(List L, int position);
+int locate(List L, int data);
+List  insertSorted(List L, int data);
+void display(List L);
+List resize(List L);
+
+int main() {
+    List L = initialize(L);
+    
+    int n;
+    printf("Enter how many elements: ");
+    scanf("%d", &n);
+    
+    printf("Enter %d elements: ", n);
+    for (int i = 0; i < n; i++){
+        scanf("%d", &L.elemPtr[i]);
+        L.count++;
+    }
+    
+    printf("Current elements: ");
+    display(L);
+    printf("\n");
+    
+    insertPos(L, 4, 3);
+    display(L);
+    
+    
+    return 0;
+}
+
+List initialize(List L){
+    L.elemPtr = malloc(sizeof(int) * LENGTH);
+    L.max = LENGTH;
+    L.count = 0;
+    return L;
+}
+
+List insertPos(List L, int data, int position){
+    if (L.count > L.max){
+        resize(L);
+    }
+    
+    for (int i = L.count-1; i >= position; i--){
+        L.elemPtr[i + 1] = L.elemPtr[i];
+    }
+    
+    L.elemPtr[position] = data;
+    L.count++;
+    return L;
+}
+
+void display(List L){
+    for (int i = 0; i < L.count; i++){
+        printf("%d ", L.elemPtr[i]);
+    }
+}
+
+List resize(List L){
+    int dobMax = L.max * 2;
+    int *tmp = realloc(L.elemPtr, sizeof(int) * dobMax);
+    L.elemPtr = tmp;
+    L.max = dobMax;
+}
