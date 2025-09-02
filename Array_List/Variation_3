@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef char String[20];
+
 typedef struct {
     int *elemPtr;
     int count;
@@ -13,29 +15,71 @@ List initialize(List L);
 List insertPos(List L, int data, int position);
 List deletePos(List L, int position);
 int locate(List L, int data);
-List  insertSorted(List L, int data);
+List insertSorted(List L, int data);
 void display(List L);
 List resize(List L);
 
-int main() {
+int main(){
     List L = initialize(L);
+    int choice;
+    String menu[4] = {"Insert At Position", "Delete At Position", "Locate The Position", "Insert Sorted"};
     
-    int n;
-    printf("Enter how many elements: ");
-    scanf("%d", &n);
+    L.elemPtr[0] = 1;
+    L.elemPtr[1] = 2;
+    L.elemPtr[2] = 3;
+    L.elemPtr[3] = 4;
+    L.elemPtr[4] = 5;
+    L.count = 5;
     
-    printf("Enter %d elements: ", n);
-    for (int i = 0; i < n; i++){
-        scanf("%d", &L.elemPtr[i]);
-        L.count++;
-    }
-    
-    printf("Current elements: ");
+    printf("Current Elements: ");
     display(L);
-    printf("\n");
     
-    insertPos(L, 4, 3);
-    display(L);
+    int data;
+    int position;
+    
+    do {
+        printf("\n");
+        for (int i = 0; i < 4; i++){
+            printf("[%d] %s\n", i + 1, menu[i]);
+        }
+        printf("\nPick what operation to do: ");
+        scanf("%d", &choice);
+        
+        switch (choice){
+            case 1:
+                printf("\nEnter data to be inserted: ");
+                scanf("%d", &data);
+                printf("Enter position: ");
+                scanf("%d", &position);
+                L = insertPos(L, data, position);
+                printf("Updated Elements: ");
+                display(L);
+                break;
+            case 2:
+                printf("\nEnter position to be deleted: ");
+                scanf("%d", &position);
+                L = deletePos(L, position);
+                printf("Updated Elements: ");
+                display(L);
+                break;
+            case 3:
+                printf("\nEnter data to be located: ");
+                scanf("%d", &data);
+                int idx = locate(L, position);
+                printf("%d is at position %d\n", data, idx);
+                break;
+            case 4:
+                printf("\nEnter data to be inserted (sorted): ");
+                scanf("%d", &data);
+                L = insertSorted(L, data);
+                printf("Updated Elements: ");
+                display(L);
+                break;
+            default:
+                printf("Exiting program...");
+                break;
+        }
+    } while (choice != 4);
     
     
     return 0;
@@ -50,7 +94,7 @@ List initialize(List L){
 
 List insertPos(List L, int data, int position){
     if (L.count > L.max){
-        resize(L);
+        L = resize(L);
     }
     
     for (int i = L.count-1; i >= position; i--){
@@ -62,15 +106,49 @@ List insertPos(List L, int data, int position){
     return L;
 }
 
-void display(List L){
-    for (int i = 0; i < L.count; i++){
-        printf("%d ", L.elemPtr[i]);
+List deletePos(List L, int position){
+    for (int i = position; i <= L.count-1; i++){
+        L.elemPtr[i] = L.elemPtr[i + 1];
     }
+    
+    L.count--;
+    return L;
+}
+
+int locate(List L, int data){
+    for (int i = 0; i < L.count; i++){
+        if (data == L.elemPtr[i]){
+            return i;
+        }
+    }
+    return -1;
+}
+
+List insertSorted(List L, int data){
+    if (L.count > L.max){
+        L = resize(L);
+    }
+    int i = 0;
+    while (i < L.count && L.elemPtr[i] < data) i++;
+    L = insertPos(L, data, i);
+    return L;
 }
 
 List resize(List L){
-    int dobMax = L.max * 2;
-    int *tmp = realloc(L.elemPtr, sizeof(int) * dobMax);
+    int *tmp = realloc(L.elemPtr, sizeof(int) * LENGTH);
+    int newM = L.max * 2;
     L.elemPtr = tmp;
-    L.max = dobMax;
+    L.max = newM;
+    return L;
+}
+
+void display(List L){
+    for (int i = 0; i < L.count; i++){
+        printf("%d", L.elemPtr[i]);
+        
+        if (i < L.count - 1){
+            printf(", ");
+        }
+    }
+    printf("\n");
 }
