@@ -1,5 +1,5 @@
-#define MAX 20
-//holaaa
+#define MAX 10
+
 #include <stdio.h>
 
 typedef struct {
