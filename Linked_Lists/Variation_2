@@ -1,0 +1,151 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef char String[20];
+typedef struct node {
+    int data;
+    struct node *next;
+} Node;
+
+typedef struct {
+    Node *head;
+    int count;
+} List;
+
+List* initialize(){
+    List* list = (List*)malloc(sizeof(List));
+    if (list != NULL){
+        list->head = NULL;
+        list->count = 0;   
+    }
+    return list;
+}
+
+void empty(List *list);
+void insertFirst(List *list, int data);
+void insertLast(List *list, int data);
+void insertPos(List *list, int data, int index);
+void deleteStart(List *list);
+void deleteLast(List *list);
+void deletePos(List *list, int index);
+int retrieve(List *list, int index);
+int locate(List *list, int data);
+void display(List *list);
+
+int main() {
+    List *list = initialize();
+    
+    String menu[8] = {"Insert First", "Insert Last", "Insert at Position", "Delete First", "Delete Last", "Delete at Position", "Retrieve Element", "Locate Position"};
+    
+    int choice, data, position;
+    
+    do {
+        for (int i = 0; i < 8; i++){
+            printf("[%d] %s\n", i + 1, menu[i]);
+        }
+        printf("\nPick what operation to do: ");
+        scanf("%d", &choice);
+        
+        switch(choice){
+            case 1:
+                printf("\nEnter data to be inserted: ");
+                scanf("%d", &data);
+                insertFirst(list, data);
+                printf("Elements: ");
+                display(list);
+                break;
+            case 2:
+                printf("\nEnter data to be inserted: ");
+                scanf("%d", &data);
+                insertLast(list, data);
+                printf("Elements: ");
+                display(list);
+                break;
+            case 3:
+                break;
+            case 4:
+                deleteStart(list);
+                printf("Elements: ");
+                display(list);
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            default:
+                printf("Exiting program...");
+                break;
+        }
+    } while (choice != 8);
+    
+    return 0;
+}
+
+// void empty(List *list){
+//     for (int i = 0; i < list->count; i++){
+        
+//     }
+//     list->head = NULL;
+//     list->count = 0;
+// }
+
+void insertFirst(List *list, int data){
+    Node *newNode = malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = list->head;
+    list->head = newNode;
+    list->count++;
+}
+
+void insertLast(List *list, int data){
+    Node *newNode = malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    
+    if (list->head == NULL){
+        list->head = newNode;
+    } else {
+        Node *curr = list->head;
+        while (curr->next != NULL){
+            curr = curr->next;
+        }
+        curr->next = newNode;
+        list->count++;
+    }
+}
+
+// void insertPos(List *list, int data, int index){
+//     if (index == 0){
+//         insertFirst(list, data);
+//     } else if (index == list->count-1){
+//         insertLast(list, data);
+//     } else {
+//         Node *newNode = malloc(sizeof(Node));
+//         newNode->data = data;
+//         Node *curr = list->head;
+//     }
+// }
+
+void deleteStart(List *list){
+    Node *curr = list->head;
+    list->head = curr->next;
+    free(curr);
+    list->count--;
+}
+
+void deleteLast(List *list){
+    if ()
+}
+
+void display(List *list){
+    Node *curr = list->head;
+    for (int i = 0; i < list->count; i++){
+        printf("%d ", curr->data);
+        curr = curr->next;
+    }
+    printf("\n\n");
+}
