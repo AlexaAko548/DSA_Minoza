@@ -37,7 +37,7 @@ int main() {
     
     String menu[8] = {"Insert First", "Insert Last", "Insert at Position", "Delete First", "Delete Last", "Delete at Position", "Retrieve Element", "Locate Position"};
     
-    int choice, data, position;
+    int choice, data, index;
     
     do {
         for (int i = 0; i < 8; i++){
@@ -62,15 +62,30 @@ int main() {
                 display(list);
                 break;
             case 3:
-                break;
-            case 4:
-                deleteStart(list);
+                printf("\nEnter data to be inserted: ");
+                scanf("%d", &data);
+                printf("\nEnter position: ");
+                scanf("%d", &index);
+                insertPos(list, data, index);
                 printf("Elements: ");
                 display(list);
                 break;
+            case 4:
+                deleteStart(list);
+                printf("\nElements: ");
+                display(list);
+                break;
             case 5:
+                deleteLast(list);
+                printf("\nElements: ");
+                display(list);
                 break;
             case 6:
+                printf("\nEnter position to be deleted: ");
+                scanf("%d", &index);
+                deletePos(list, index);
+                printf("Elements: ");
+                display(list);
                 break;
             case 7:
                 break;
@@ -85,50 +100,62 @@ int main() {
     return 0;
 }
 
-// void empty(List *list){
-//     for (int i = 0; i < list->count; i++){
-        
-//     }
-//     list->head = NULL;
-//     list->count = 0;
-// }
+void empty(List *list){
+    Node *curr = list->head;
+    Node *tmp;
+    
+    while (curr != NULL) {
+        tmp = curr;
+        curr = curr->next;
+        free(tmp);
+    }
+    
+    list->head = NULL;
+    list->count = 0;
+}
 
 void insertFirst(List *list, int data){
-    Node *newNode = malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->next = list->head;
-    list->head = newNode;
+    Node *newN = malloc(sizeof(Node));
+    newN->data = data;
+    newN->next = list->head;
+    list->head = newN;
     list->count++;
 }
 
 void insertLast(List *list, int data){
-    Node *newNode = malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->next = NULL;
+    Node *newN = malloc(sizeof(Node));
+    newN->data = data;
+    newN->next = NULL;
     
     if (list->head == NULL){
-        list->head = newNode;
+        list->head = newN;
     } else {
         Node *curr = list->head;
         while (curr->next != NULL){
             curr = curr->next;
         }
-        curr->next = newNode;
+        curr->next = newN;
+    }
+    list->count++;
+}
+
+void insertPos(List *list, int data, int index){
+    if (index == 0){
+        insertFirst(list, data);
+    } else if (index == list->count){
+        insertLast(list, data);
+    } else {
+        Node *newN = malloc(sizeof(Node));
+        newN->data = data;
+        Node *curr = list->head;
+        for (int i = 0; i < index-1; i++){
+            curr = curr->next;
+        }
+        newN->next = curr->next;
+        curr->next = newN;
         list->count++;
     }
 }
-
-// void insertPos(List *list, int data, int index){
-//     if (index == 0){
-//         insertFirst(list, data);
-//     } else if (index == list->count-1){
-//         insertLast(list, data);
-//     } else {
-//         Node *newNode = malloc(sizeof(Node));
-//         newNode->data = data;
-//         Node *curr = list->head;
-//     }
-// }
 
 void deleteStart(List *list){
     Node *curr = list->head;
@@ -138,7 +165,34 @@ void deleteStart(List *list){
 }
 
 void deleteLast(List *list){
-    if ()
+    if (list->count == 1) {
+        free(list->head);
+        list->head = NULL;
+        list->count--;
+    } else {
+        Node *curr = list->head;
+        for (int i = 0; i < list->count-2; i++) {
+            curr = curr->next;
+        }
+        free(curr->next);
+        curr->next = NULL;
+        list->count--;
+    }
+}
+
+void deletePos(List *list, int index) {
+    if (index == 0) {
+        deleteStart(list);
+    } else {
+        Node *curr = list->head;
+        for (int i = 0; i < index-1; i++){
+            curr = curr->next;
+        }
+        Node *tmp = curr->next;
+        curr->next = tmp->next;
+        free(tmp);
+        list->count--;
+    }
 }
 
 void display(List *list){
