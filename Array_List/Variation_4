@@ -68,7 +68,7 @@ int main(){
             case 3:
                 printf("\nEnter data to be located: ");
                 scanf("%d", &data);
-                int idx = locate(L, position);
+                int idx = locate(L,  data);
                 printf("%d is at position %d\n", data, idx);
                 break;
             case 4:
@@ -88,7 +88,7 @@ int main(){
                 printf("Exiting program...");
                 break;
         }
-    } while (choice != 4);
+    } while (choice != 5);
     
     
     return 0;
@@ -101,23 +101,21 @@ void initialize(List *L){
 }
 
 void insertPos(List *L, int data, int position){
-    if (L->count > L->max){
-       resize(L);
+    if (L->count > L->max) {
+        resize(L);
     }
     
-    for (int i = L->count-1; i >= position; i--){
+    for (int i = L->count-1; i >= position; i--) {
         L->elemPtr[i + 1] = L->elemPtr[i];
     }
-    
-    L->elemPtr[position] = data;
     L->count++;
+    L->elemPtr[position] = data;
 }
 
 void deletePos(List *L, int position){
-    for (int i = position; i <= L->count-1; i++){
+    for (int i = position; i <= L->count-1; i++) {
         L->elemPtr[i] = L->elemPtr[i + 1];
     }
-    
     L->count--;
 }
 
@@ -131,15 +129,16 @@ int locate(List *L, int data){
 }
 
 int retrieve(List *L, int position){
-    for (int i = position; i < L->count; i++){
-        
+    if (position <= L->count-1){
+        return L->elemPtr[position];
     }
 }
 
 void insertSorted(List *L, int data){
-    if (L->count > L->max){
+    if (L->count > L->max) {
         resize(L);
     }
+    
     int i = 0;
     while (i < L->count && L->elemPtr[i] < data) i++;
     insertPos(L, data, i);
@@ -154,11 +153,11 @@ void resize(List *L){
 
 void display(List *L){
     for (int i = 0; i < L->count; i++){
-        printf("%d", L->elemPtr[i]);
-        
-        if (i < L->count - 1){
-            printf(", ");
-        }
+        printf("%d ", L->elemPtr[i]);
     }
     printf("\n");
+}
+
+void makeNULL(List *L){
+    free(L);
 }
