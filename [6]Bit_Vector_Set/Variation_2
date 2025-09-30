@@ -1,0 +1,89 @@
+//Bit Vector Set (Variation 2)
+#include <stdio.h>
+#include <stdbool.h>
+
+typedef struct {
+    unsigned int field : 8;
+} Set;
+
+void initialize(Set *set);
+void insert(Set *set, int elem);
+void deleteEl(Set *set, int elem);
+bool find(Set set, int elem);
+Set setUnion(Set A, Set B);
+Set intersection(Set A, Set B);
+Set difference(Set A, Set B);
+void display(Set set);
+
+int main() {
+    Set A;
+    initialize(&A);
+    insert(&A, 2);
+    insert(&A, 4);
+    printf("A = "); display(A);
+    
+    Set B;
+    initialize(&B);
+    insert(&B, 5);
+    insert(&B, 7);
+    printf("\nB = "); display(B);
+    
+    Set C;
+    
+    C = setUnion(A, B);
+    printf("\nUnion of A and B: "); display(C);
+    
+    C = intersection(A, B);
+    printf("\nIntersection of A and B: "); display(C);
+    
+    C = difference(A, B);
+    printf("\nDifference of A and B: "); display(C);
+    
+    printf("\nDoes element 4 exist in Set A? -- %s", find(A, 4) ? "true" : "false");
+    
+    deleteEl(&A, 2);
+    deleteEl(&A, 4);
+    printf("\nafter deletes, A = "); display(A);    
+    
+    return 0;
+}
+
+void initialize(Set *set) {
+    set->field = 0;
+}
+void insert(Set *set, int elem) {
+    if (elem < 0 || elem >= 8) return;
+    set->field |= (1 << elem);
+}
+void deleteEl(Set *set, int elem) {
+    if (elem < 0 || elem >= 8) return;
+    set->field &= ~(1 << elem);
+}
+bool find(Set set, int elem) {
+    return (set.field & (1 << elem)) != 0;
+}
+Set setUnion(Set A, Set B) {
+    Set C;
+    C.field = (A.field | B.field);
+    return C;
+}
+Set intersection(Set A, Set B) {
+    Set C;
+    C.field = (A.field & B.field);
+    return C;
+}
+Set difference(Set A, Set B) {
+    Set C;
+    C.field = (A.field & ~B.field);
+    return C;
+}
+void display(Set set) {
+    int first = 1;
+    for (int i = 0; i < 8; i++) {
+        if (set.field & (1 << i)) {
+            if(!first) printf(", ");
+            printf("%d", i);
+            first = 0;
+        }
+    }
+}
